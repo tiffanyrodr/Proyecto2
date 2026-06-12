@@ -9,13 +9,16 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "drizzle-orm": "^0.45.2",
     "expo": "~54.0.34",
+    "expo-sqlite": "~16.0.10",
     "expo-status-bar": "~3.0.9",
     "react": "19.1.0",
     "react-native": "0.81.5"
   },
   "devDependencies": {
     "@types/react": "~19.1.0",
+    "drizzle-kit": "^0.31.10",
     "typescript": "~5.9.2"
   },
   "private": true
