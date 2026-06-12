@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { db } from "@/db/client";
+import { partidos } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { useLiveQuery } from "drizzle-orm/expo-sqlite";
+import { useState } from "react";
 import {
-  View,
-  Text,
   FlatList,
+  StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
+  View,
 } from "react-native";
-import { eq } from "drizzle-orm";
-import { db } from "../db/client";
-import { partidos } from "../db/schema";
 
 export default function Index() {
   const [equipoLocal, setEquipoLocal] = useState("");
@@ -18,16 +19,8 @@ export default function Index() {
   const [golesVisitante, setGolesVisitante] = useState("");
   const [fecha, setFecha] = useState("");
   const [grupo, setGrupo] = useState("");
-  const [lista, setLista] = useState<typeof partidos.$inferSelect[]>([]);
 
-  useEffect(() => {
-    cargarPartidos();
-  }, []);
-
-  async function cargarPartidos() {
-    const resultado = await db.select().from(partidos);
-    setLista(resultado);
-  }
+  const { data: lista } = useLiveQuery(db.select().from(partidos));
 
   async function agregarPartido() {
     if (!equipoLocal || !equipoVisitante || !fecha || !grupo) return;
@@ -45,12 +38,10 @@ export default function Index() {
     setGolesVisitante("");
     setFecha("");
     setGrupo("");
-    cargarPartidos();
   }
 
   async function eliminarPartido(id: number) {
     await db.delete(partidos).where(eq(partidos.id, id));
-    cargarPartidos();
   }
 
   return (
