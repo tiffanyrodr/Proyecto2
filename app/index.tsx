@@ -2,6 +2,7 @@ import { db } from "@/db/client";
 import { partidos } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { useLiveQuery } from "drizzle-orm/expo-sqlite";
+import { Link } from "expo-router";
 import { useState } from "react";
 import {
   FlatList,
@@ -59,6 +60,10 @@ export default function Index() {
         <Text style={styles.botonTexto}>Agregar partido</Text>
       </TouchableOpacity>
 
+      <Link href="/mundial" style={styles.linkMundial}>
+        <Text style={styles.linkMundialTexto}>Ver resultados del Mundial</Text>
+      </Link>
+
       <FlatList
         data={lista}
         keyExtractor={(item) => item.id.toString()}
@@ -81,8 +86,10 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: "#F5F7FA" },
   titulo: { fontSize: 22, fontWeight: "bold", color: "#111827", marginBottom: 16 },
   input: { backgroundColor: "#fff", borderRadius: 8, padding: 10, marginBottom: 8, fontSize: 15 },
-  boton: { backgroundColor: "#2563EB", padding: 14, borderRadius: 10, alignItems: "center", marginBottom: 16 },
+  boton: { backgroundColor: "#2563EB", padding: 14, borderRadius: 10, alignItems: "center", marginBottom: 8 },
   botonTexto: { color: "#fff", fontWeight: "bold", fontSize: 15 },
+  linkMundial: { backgroundColor: "#16A34A", padding: 14, borderRadius: 10, alignItems: "center", marginBottom: 16 },
+  linkMundialTexto: { color: "#fff", fontWeight: "bold", fontSize: 15, textAlign: "center" },
   card: { backgroundColor: "#fff", padding: 14, borderRadius: 12, marginBottom: 10, elevation: 2 },
   cardTitulo: { fontSize: 16, fontWeight: "bold", color: "#111827", marginBottom: 4 },
   cardInfo: { fontSize: 14, color: "#4B5563", marginBottom: 2 },
