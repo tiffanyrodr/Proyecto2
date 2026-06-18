@@ -1,5 +1,5 @@
 import { fetchClient } from "@/lib/api/fetch-client";
-import { Partido, State } from "@/lib/api/types";
+import { WorldCupResponse, State } from "@/lib/api/types";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 export default function Mundial() {
-  const [state, setState] = useState<State<Partido[]>>({
+  const [state, setState] = useState<State<WorldCupResponse>>({
     data: null,
     loading: true,
     error: null,
@@ -18,7 +18,7 @@ export default function Mundial() {
 
   useEffect(() => {
     fetchClient
-      .get<Partido[]>("/matches")
+      .get<WorldCupResponse>("/worldcup.json")
       .then((data) => setState({ data, loading: false, error: null }))
       .catch((e) =>
         setState({ data: null, loading: false, error: e.message })
@@ -44,20 +44,21 @@ export default function Mundial() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Resultados del Mundial</Text>
+      <Text style={styles.titulo}>Mundial 2026 - Resultados</Text>
       <FlatList
-        data={state.data}
-        keyExtractor={(item) => item.id.toString()}
+        data={state.data?.matches}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <View style={styles.card}>
             <Text style={styles.cardTitulo}>
-              {item.homeTeam} vs {item.awayTeam}
+              {item.team1} vs {item.team2}
             </Text>
             <Text style={styles.cardInfo}>
-              Resultado: {item.homeScore} - {item.awayScore}
+              Resultado: {item.score?.ft?.[0] ?? "-"} - {item.score?.ft?.[1] ?? "-"}
             </Text>
-            <Text style={styles.cardInfo}>Fecha: {item.date}</Text>
             <Text style={styles.cardInfo}>Grupo: {item.group}</Text>
+            <Text style={styles.cardInfo}>Fecha: {item.date}</Text>
+            <Text style={styles.cardInfo}>Sede: {item.ground}</Text>
           </View>
         )}
       />
