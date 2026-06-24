@@ -1,4 +1,5 @@
 import { expoDb } from "@/db/client";
+import { PartidosProvider } from "@/context/PartidosContext";
 import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
@@ -34,9 +35,11 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="mundial" />
-    </Stack>
+    <PartidosProvider>
+      <Stack>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="mundial" />
+      </Stack>
+    </PartidosProvider>
   );
 }

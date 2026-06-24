@@ -1,7 +1,4 @@
-import { db } from "@/db/client";
-import { partidos } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { useLiveQuery } from "drizzle-orm/expo-sqlite";
+import { usePartidos } from "@/context/PartidosContext";
 import { Link } from "expo-router";
 import { useState } from "react";
 import {
@@ -14,6 +11,8 @@ import {
 } from "react-native";
 
 export default function Index() {
+  const { lista, agregarPartido, eliminarPartido } = usePartidos();
+
   const [equipoLocal, setEquipoLocal] = useState("");
   const [equipoVisitante, setEquipoVisitante] = useState("");
   const [golesLocal, setGolesLocal] = useState("");
@@ -21,11 +20,9 @@ export default function Index() {
   const [fecha, setFecha] = useState("");
   const [grupo, setGrupo] = useState("");
 
-  const { data: lista } = useLiveQuery(db.select().from(partidos));
-
-  async function agregarPartido() {
+  async function handleAgregar() {
     if (!equipoLocal || !equipoVisitante || !fecha || !grupo) return;
-    await db.insert(partidos).values({
+    await agregarPartido({
       equipoLocal,
       equipoVisitante,
       golesLocal: parseInt(golesLocal) || 0,
@@ -41,10 +38,6 @@ export default function Index() {
     setGrupo("");
   }
 
-  async function eliminarPartido(id: number) {
-    await db.delete(partidos).where(eq(partidos.id, id));
-  }
-
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>Partidos del Mundial 2026</Text>
@@ -56,7 +49,7 @@ export default function Index() {
       <TextInput style={styles.input} placeholder="Fecha (ej: 2026-06-11)" value={fecha} onChangeText={setFecha} />
       <TextInput style={styles.input} placeholder="Grupo (ej: A)" value={grupo} onChangeText={setGrupo} />
 
-      <TouchableOpacity style={styles.boton} onPress={agregarPartido}>
+      <TouchableOpacity style={styles.boton} onPress={handleAgregar}>
         <Text style={styles.botonTexto}>Agregar partido</Text>
       </TouchableOpacity>
 
